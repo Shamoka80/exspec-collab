@@ -2,15 +2,19 @@
 
 Presented under **Wrek’d Tech | Ex-Spec**.
 
-Tagline: **Greener Thinking. Smarter Recycling.**
+Primary tagline: **Greener Thinking. Smarter Recycling.**
 
 ## 1) Project overview
-This repository contains a lightweight, single-page, static landing page for the **Ex-Spec Academic & Industry Research Initiative**. The page is designed for GitHub Pages and will support outreach to colleges, universities, researchers, grant partners, and industry collaborators.
+This repository hosts a single-page, static GitHub Pages site for the Ex-Spec Academic & Industry Research Initiative.
 
-The landing page uses plain HTML, CSS, and minimal vanilla JavaScript only. It introduces Ex-Spec in future-tense language and clearly states that Ex-Spec is currently in the conceptual and system-design stage.
+The implementation uses:
+- semantic HTML5 (`index.html`)
+- plain CSS (`style.css`)
+- vanilla JavaScript (`script.js`)
+
+The page is intentionally written in future-tense program language and explicitly states that Ex-Spec is currently in the conceptual and system-design stage.
 
 ## 2) File structure
-
 ```text
 /
 ├── index.html
@@ -18,74 +22,109 @@ The landing page uses plain HTML, CSS, and minimal vanilla JavaScript only. It i
 ├── script.js
 ├── README.md
 └── assets/
+    ├── ReadMe.md
     ├── docs/
+    │   ├── ReadMe.md
     │   └── Wrekd-Tech-ExSpec-NDA.pdf
-    ├── logos/
-    │   └── (existing logo assets)
-    └── images/
-        └── placeholder-research-visual.svg
+    ├── images/
+    │   ├── ReadMe.md
+    │   ├── Recovered REE.jpg
+    │   └── placeholder-research-visual.svg
+    └── logos/
+        ├── ReadMe.md
+        └── (existing logo files)
 ```
 
 ## 3) GitHub Pages deployment steps
-1. Push the repository to GitHub.
-2. In GitHub, open **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to **Deploy from a branch**.
-4. Select the branch (typically `main`) and folder `/ (root)`.
-5. Save, then wait for deployment.
-6. Confirm the site opens at your GitHub Pages URL.
+1. Push the latest commit to the branch used for publishing (typically `main`).
+2. Open **GitHub → Repository → Settings → Pages**.
+3. Under **Build and deployment**, choose **Deploy from a branch**.
+4. Select branch `main` (or desired branch) and folder `/ (root)`.
+5. Save and wait for deployment.
+6. Open the site URL and force refresh to verify the latest files are served.
 
-## 4) Google Form setup steps
-1. Create a Google Form titled for Ex-Spec research and partnership inquiry.
-2. Make all fields below **required**:
-   - First Name
-   - Last Name
-   - Institution / Organization
-   - Title / Role
-   - Email Address
-   - Phone Number
-   - Department
-   - Area of Interest
-   - Message / Interest Note / Description
-3. Configure **Area of Interest** as a dropdown with these options:
-   - Research collaboration
-   - Technical validation
-   - Faculty engagement
-   - Student research participation
-   - Systems engineering support
-   - Robotics / automation
-   - AI / sensing
-   - Environmental research
-   - Materials recovery research
-   - Rare-earth element recovery
-   - Hazardous-material handling and safety validation
-   - Life-cycle assessment and sustainability impact research
-   - Regulatory and compliance research
-   - Workforce development / applied technical training
-   - Grant collaboration
-   - Consortium participation
-   - Other
-4. Publish the form and copy the embed URL.
-5. Replace `REPLACE_WITH_GOOGLE_FORM_EMBED_URL` in `index.html` with the published embed URL.
+## 4) Google Sheets columns
+Required tab name:
+- `Responses`
 
-## 5) NDA PDF placement instructions
-- Expected NDA location:
-  - `/assets/docs/Wrekd-Tech-ExSpec-NDA.pdf`
-- This file is intended to be linked from the Google Form confirmation page after submission.
-- Do not add legal text in this repo; upload only the finalized NDA PDF.
+Required columns (in this order):
+1. Timestamp
+2. First Name
+3. Last Name
+4. Institution / Organization
+5. Title / Role
+6. Email Address
+7. Phone Number
+8. Department
+9. Area of Interest
+10. Message / Interest Note / Description
+11. Consent Confirmation
 
-## 6) Google Form confirmation message template
-Use the following confirmation message in Google Forms after submit:
+## 5) Google Apps Script endpoint currently used
+Working Apps Script URL:
 
-```text
-Thank you. Your inquiry has been received.
+`https://script.google.com/macros/s/AKfycbx8B0xEWk-KF6TVYvaAhVP0G-3yvjApVWe36u4OtIxU5oCE5C96ju0dxDxLAlTmaqdQ/exec`
 
-You may now access the NDA for review and signature here:
-[INSERT LIVE NDA PDF URL]
+## 6) How to replace/update the Apps Script URL
+1. Open `script.js`.
+2. Locate:
+   ```js
+   const GOOGLE_APPS_SCRIPT_WEB_APP_URL = "...";
+   ```
+3. Replace the URL string with the new deployed Apps Script Web App URL.
+4. Commit and redeploy.
 
-After signing, please return the completed NDA to research@wrekdtech.com. Upon receipt, Wrek’d Tech will countersign and return a fully executed copy along with the material(s) approved for release.
+## 7) NDA PDF placement instructions
+Expected NDA path:
+
+`assets/docs/Wrekd-Tech-ExSpec-NDA.pdf`
+
+The download button in `index.html` points to:
+
+`/assets/docs/Wrekd-Tech-ExSpec-NDA.pdf`
+
+If replacing the document, keep the same filename to avoid link changes.
+
+## 8) Form field list
+All fields are required:
+- First Name (`firstName`)
+- Last Name (`lastName`)
+- Institution / Organization (`institution`)
+- Title / Role (`role`)
+- Email Address (`email`)
+- Phone Number (`phone`)
+- Department (`department`)
+- Area of Interest (`areaOfInterest`)
+- Message / Interest Note / Description (`message`)
+- Consent checkbox (`consent`)
+
+Submission payload keys:
+```json
+{
+  "firstName": "",
+  "lastName": "",
+  "institution": "",
+  "role": "",
+  "email": "",
+  "phone": "",
+  "department": "",
+  "areaOfInterest": "",
+  "message": "",
+  "consent": true
+}
 ```
 
-## Operational notes
-- Contact email used consistently across the site: `research@wrekdtech.com`.
-- Ex-Spec statements are intentionally future-tense to avoid implying current commercial deployment.
-- The Google Form embed and live NDA URL are the two expected owner-configured items.
+## 9) Testing checklist
+- Open the live site.
+- Confirm page design is professional and not using a Google Form iframe.
+- Complete the inquiry form with test data.
+- Confirm success message appears.
+- Confirm NDA download section appears after submission.
+- Confirm the test row appears in Google Sheet.
+- Confirm mobile layout is readable.
+- Confirm all navigation links scroll correctly.
+
+## 10) Remaining TODO items
+- Validate end-to-end Google Apps Script response behavior with production Sheet permissions.
+- Confirm final legal review/version of `assets/docs/Wrekd-Tech-ExSpec-NDA.pdf`.
+- If NDA PDF is not final, upload the final approved file to `assets/docs/Wrekd-Tech-ExSpec-NDA.pdf`.

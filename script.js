@@ -1,194 +1,147 @@
 (() => {
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const GOOGLE_APPS_SCRIPT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx8B0xEWk-KF6TVYvaAhVP0G-3yvjApVWe36u4OtIxU5oCE5C96ju0dxDxLAlTmaqdQ/exec";
 
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      const targetId = link.getAttribute('href');
-      if (!targetId || targetId === '#') return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const yearNode = document.getElementById("year");
+  const form = document.getElementById("inquiry-form");
+  const statusNode = document.getElementById("form-status");
+  const submitButton = document.getElementById("submit-button");
+  const ndaDownload = document.getElementById("nda-download");
+
+  if (yearNode) {
+    yearNode.textContent = String(new Date().getFullYear());
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", (event) => {
+      const targetId = anchor.getAttribute("href");
+      if (!targetId || targetId === "#") return;
 
       const target = document.querySelector(targetId);
       if (!target) return;
 
       event.preventDefault();
-      target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      target.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
     });
   });
 
-  const yearNode = document.getElementById('year');
-  if (yearNode) yearNode.textContent = String(new Date().getFullYear());
-
-  const revealNodes = document.querySelectorAll('.reveal-on-scroll');
-  if (!reduceMotion && 'IntersectionObserver' in window) {
-    const revealObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-
-    revealNodes.forEach((element) => revealObserver.observe(element));
-  } else {
-    revealNodes.forEach((element) => element.classList.add('is-visible'));
-  }
-
-  const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-  const sectionTargets = navLinks
+  const navLinks = Array.from(document.querySelectorAll(".site-nav a"));
+  const sectionMap = navLinks
     .map((link) => {
-      const target = document.querySelector(link.getAttribute('href') || '');
-      return target ? { link, target } : null;
+      const section = document.querySelector(link.getAttribute("href") || "");
+      return section ? { link, section } : null;
     })
     .filter(Boolean);
 
-  if (sectionTargets.length && 'IntersectionObserver' in window) {
+  if (sectionMap.length && "IntersectionObserver" in window) {
     const navObserver = new IntersectionObserver(
       (entries) => {
-        const visibleEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          sectionMap.forEach(({ link, section }) => {
+            if (section.id === entry.target.id) {
+              link.setAttribute("aria-current", "true");
+            } else {
+              link.removeAttribute("aria-current");
+            }
+          });
+        });
+      },
+      { rootMargin: "-35% 0px -45% 0px", threshold: 0.25 }
+    );
 
-        if (!visibleEntry) return;
+    sectionMap.forEach(({ section }) => navObserver.observe(section));
+  }
 
-        sectionTargets.forEach(({ link, target }) => {
-          const isActive = target.id === visibleEntry.target.id;
-          if (isActive) {
-            link.setAttribute('aria-current', 'true');
-          } else {
-            link.removeAttribute('aria-current');
+  const revealNodes = document.querySelectorAll(".reveal");
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const revealObserver = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
           }
         });
       },
-      {
-        threshold: [0.2, 0.4, 0.6],
-        rootMargin: '-35% 0px -45% 0px',
-      }
+      { threshold: 0.1 }
     );
 
-    sectionTargets.forEach(({ target }) => navObserver.observe(target));
-  }
-
-  const hero = document.querySelector('.hero');
-  if (hero && !reduceMotion) {
-    hero.addEventListener('pointermove', (event) => {
-      const rect = hero.getBoundingClientRect();
-      const x = ((event.clientX - rect.left) / rect.width) * 100;
-      const y = ((event.clientY - rect.top) / rect.height) * 100;
-      hero.style.setProperty('--mouse-x', `${x}%`);
-      hero.style.setProperty('--mouse-y', `${y}%`);
-    });
-  }
-
-  const opportunityItems = Array.from(document.querySelectorAll('.opportunity-item'));
-  const interactionModeQuery = window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)');
-  const itemState = new Map();
-  const inactivityTimers = new Map();
-  const DESKTOP_INACTIVITY_CLOSE_MS = 2000;
-
-  const setExpandedState = (item, shouldExpand) => {
-    const trigger = item.querySelector('.opportunity-trigger');
-    if (!trigger) return;
-
-    trigger.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
-    item.classList.toggle('is-open', shouldExpand);
-    itemState.set(item, shouldExpand);
-  };
-
-  const collapseAll = (exceptItem) => {
-    opportunityItems.forEach((item) => {
-      if (item !== exceptItem) setExpandedState(item, false);
-    });
-  };
-
-  const clearInactivityTimer = (item) => {
-    const timerId = inactivityTimers.get(item);
-    if (timerId) {
-      window.clearTimeout(timerId);
-      inactivityTimers.delete(item);
-    }
-  };
-
-  const scheduleDesktopAutoClose = (item) => {
-    clearInactivityTimer(item);
-    const timerId = window.setTimeout(() => {
-      if (interactionModeQuery.matches) return;
-      const hasPointerHover = item.matches(':hover');
-      const hasKeyboardFocus = item.matches(':focus-within');
-      if (!hasPointerHover && !hasKeyboardFocus) {
-        item.classList.remove('is-hovered');
-        setExpandedState(item, false);
-      }
-      inactivityTimers.delete(item);
-    }, DESKTOP_INACTIVITY_CLOSE_MS);
-    inactivityTimers.set(item, timerId);
-  };
-
-  const refreshInteractionMode = () => {
-    const mobileFirstMode = interactionModeQuery.matches;
-    opportunityItems.forEach((item, index) => {
-      clearInactivityTimer(item);
-      item.classList.remove('is-hovered');
-      if (mobileFirstMode) {
-        setExpandedState(item, itemState.get(item) ?? false);
-      } else {
-        setExpandedState(item, index === 0);
-      }
-    });
-  };
-
-  opportunityItems.forEach((item) => {
-    const trigger = item.querySelector('.opportunity-trigger');
-    if (!trigger) return;
-
-    trigger.addEventListener('click', () => {
-      const isMobileMode = interactionModeQuery.matches;
-      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-
-      if (isMobileMode) {
-        setExpandedState(item, !isOpen);
-      } else {
-        collapseAll(item);
-        setExpandedState(item, true);
-        scheduleDesktopAutoClose(item);
-      }
-    });
-
-    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      item.addEventListener('mouseenter', () => {
-        if (interactionModeQuery.matches) return;
-        clearInactivityTimer(item);
-        collapseAll(item);
-        item.classList.add('is-hovered');
-        setExpandedState(item, true);
-      });
-
-      item.addEventListener('mouseleave', () => {
-        if (interactionModeQuery.matches) return;
-        item.classList.remove('is-hovered');
-        scheduleDesktopAutoClose(item);
-      });
-    }
-
-    item.addEventListener('focusin', () => {
-      if (interactionModeQuery.matches) return;
-      clearInactivityTimer(item);
-      collapseAll(item);
-      setExpandedState(item, true);
-    });
-
-    item.addEventListener('focusout', () => {
-      if (interactionModeQuery.matches) return;
-      scheduleDesktopAutoClose(item);
-    });
-  });
-
-  if (interactionModeQuery.addEventListener) {
-    interactionModeQuery.addEventListener('change', refreshInteractionMode);
+    revealNodes.forEach((node) => revealObserver.observe(node));
   } else {
-    interactionModeQuery.addListener(refreshInteractionMode);
+    revealNodes.forEach((node) => node.classList.add("visible"));
   }
-  refreshInteractionMode();
+
+  const setStatus = (message, stateClass) => {
+    if (!statusNode) return;
+    statusNode.textContent = message;
+    statusNode.classList.remove("processing", "success", "error");
+    if (stateClass) statusNode.classList.add(stateClass);
+  };
+
+  const setSubmitting = (submitting) => {
+    if (!submitButton) return;
+    submitButton.disabled = submitting;
+    submitButton.textContent = submitting ? "Submitting..." : "Submit Inquiry";
+  };
+
+  if (!form) return;
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    if (!form.reportValidity()) {
+      setStatus("Please complete all required fields before submitting.", "error");
+      return;
+    }
+
+    const formData = new FormData(form);
+    const payload = {
+      firstName: String(formData.get("firstName") || "").trim(),
+      lastName: String(formData.get("lastName") || "").trim(),
+      institution: String(formData.get("institution") || "").trim(),
+      role: String(formData.get("role") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      department: String(formData.get("department") || "").trim(),
+      areaOfInterest: String(formData.get("areaOfInterest") || "").trim(),
+      message: String(formData.get("message") || "").trim(),
+      consent: formData.get("consent") === "on",
+    };
+
+    setSubmitting(true);
+    setStatus("Submitting your request...", "processing");
+
+    try {
+      const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      let data = null;
+      const responseText = await response.text();
+      try {
+        data = responseText ? JSON.parse(responseText) : null;
+      } catch {
+        data = null;
+      }
+
+      const hasExplicitFailure = data && (data.status === "error" || data.success === false);
+      if (!response.ok || hasExplicitFailure) {
+        throw new Error("Submission failed");
+      }
+
+      setStatus("Thank you. Your inquiry has been received.", "success");
+      form.reset();
+      ndaDownload.hidden = false;
+      ndaDownload.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    } catch (_error) {
+      setStatus("Submission could not be completed. Please contact research@wrekdtech.com directly.", "error");
+    } finally {
+      setSubmitting(false);
+    }
+  });
 })();
