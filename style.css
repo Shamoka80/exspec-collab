@@ -327,67 +327,6 @@ p {
   padding: 0.7rem 0.8rem;
 }
 
-.opportunity-item {
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-}
-
-.opportunity-item:hover,
-.opportunity-item:focus-within {
-  border-color: rgba(246, 179, 19, 0.62);
-  box-shadow: var(--shadow-gold);
-}
-
-.opportunity-trigger {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: var(--color-text-primary);
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 700;
-  padding: 0;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.8rem;
-}
-
-.opportunity-trigger::after {
-  content: "+";
-  color: var(--color-gold);
-  font-weight: 800;
-  line-height: 1;
-  transform-origin: center;
-  transition: transform var(--transition-fast), color var(--transition-fast);
-}
-
-.opportunity-item.is-open .opportunity-trigger::after,
-.opportunity-trigger[aria-expanded="true"]::after {
-  content: "–";
-}
-
-.opportunity-details {
-  max-height: 0;
-  margin: 0;
-  overflow: hidden;
-  color: var(--color-text-secondary);
-  transition: max-height var(--transition-standard), margin-top var(--transition-standard);
-}
-
-.opportunity-item.is-open .opportunity-details,
-.opportunity-item.is-hovered .opportunity-details,
-.opportunity-item:focus-within .opportunity-details {
-  margin-top: 0.6rem;
-  max-height: 12rem;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .opportunity-item.is-hovered .opportunity-trigger::after {
-    content: "–";
-  }
-}
-
 iframe {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
