@@ -81,4 +81,72 @@
       hero.style.setProperty('--mouse-y', `${y}%`);
     });
   }
+
+  const opportunityItems = Array.from(document.querySelectorAll('.opportunity-item'));
+  const interactionModeQuery = window.matchMedia('(max-width: 768px), (hover: none), (pointer: coarse)');
+  const itemState = new Map();
+
+  const setExpandedState = (item, shouldExpand) => {
+    const trigger = item.querySelector('.opportunity-trigger');
+    if (!trigger) return;
+
+    trigger.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
+    item.classList.toggle('is-open', shouldExpand);
+    itemState.set(item, shouldExpand);
+  };
+
+  const collapseAll = (exceptItem) => {
+    opportunityItems.forEach((item) => {
+      if (item !== exceptItem) setExpandedState(item, false);
+    });
+  };
+
+  const refreshInteractionMode = () => {
+    const mobileFirstMode = interactionModeQuery.matches;
+    opportunityItems.forEach((item, index) => {
+      item.classList.remove('is-hovered');
+      if (mobileFirstMode) {
+        setExpandedState(item, itemState.get(item) ?? false);
+      } else {
+        setExpandedState(item, index === 0);
+      }
+    });
+  };
+
+  opportunityItems.forEach((item) => {
+    const trigger = item.querySelector('.opportunity-trigger');
+    if (!trigger) return;
+
+    trigger.addEventListener('click', () => {
+      const isMobileMode = interactionModeQuery.matches;
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+
+      if (isMobileMode) {
+        setExpandedState(item, !isOpen);
+      } else {
+        collapseAll(item);
+        setExpandedState(item, true);
+      }
+    });
+
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      item.addEventListener('mouseenter', () => {
+        if (interactionModeQuery.matches) return;
+        collapseAll(item);
+        item.classList.add('is-hovered');
+        setExpandedState(item, true);
+      });
+
+      item.addEventListener('mouseleave', () => {
+        item.classList.remove('is-hovered');
+      });
+    }
+  });
+
+  if (interactionModeQuery.addEventListener) {
+    interactionModeQuery.addEventListener('change', refreshInteractionMode);
+  } else {
+    interactionModeQuery.addListener(refreshInteractionMode);
+  }
+  refreshInteractionMode();
 })();
