@@ -1,0 +1,23 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Ex-Spec research systems concept visual</title>
+  <desc id="desc">Abstract technical diagram showing connected modules for systems engineering and recycling intelligence</desc>
+  <rect width="1200" height="800" fill="#F2F2F2"/>
+  <rect x="110" y="110" width="980" height="580" rx="28" fill="white" stroke="#D9D9D9"/>
+  <circle cx="260" cy="250" r="64" fill="#F7931E" fill-opacity="0.2" stroke="#F7931E"/>
+  <circle cx="600" cy="250" r="64" fill="#39B54A" fill-opacity="0.2" stroke="#39B54A"/>
+  <circle cx="940" cy="250" r="64" fill="#1F1F1F" fill-opacity="0.08" stroke="#4D4D4D"/>
+  <circle cx="260" cy="530" r="64" fill="#39B54A" fill-opacity="0.15" stroke="#39B54A"/>
+  <circle cx="600" cy="530" r="64" fill="#F7931E" fill-opacity="0.15" stroke="#F7931E"/>
+  <circle cx="940" cy="530" r="64" fill="#1F1F1F" fill-opacity="0.08" stroke="#4D4D4D"/>
+  <path d="M324 250H536" stroke="#808080" stroke-width="3" stroke-dasharray="10 10"/>
+  <path d="M664 250H876" stroke="#808080" stroke-width="3" stroke-dasharray="10 10"/>
+  <path d="M260 314V466" stroke="#808080" stroke-width="3" stroke-dasharray="10 10"/>
+  <path d="M600 314V466" stroke="#808080" stroke-width="3" stroke-dasharray="10 10"/>
+  <path d="M940 314V466" stroke="#808080" stroke-width="3" stroke-dasharray="10 10"/>
+  <text x="220" y="255" fill="#1F1F1F" font-size="20" font-family="Arial, sans-serif">Intake</text>
+  <text x="552" y="255" fill="#1F1F1F" font-size="20" font-family="Arial, sans-serif">Sorting</text>
+  <text x="894" y="255" fill="#1F1F1F" font-size="20" font-family="Arial, sans-serif">Recovery</text>
+  <text x="201" y="535" fill="#1F1F1F" font-size="20" font-family="Arial, sans-serif">Compliance</text>
+  <text x="564" y="535" fill="#1F1F1F" font-size="20" font-family="Arial, sans-serif">Analytics</text>
+  <text x="901" y="535" fill="#1F1F1F" font-size="20" font-family="Arial, sans-serif">Intelligence</text>
+</svg>
