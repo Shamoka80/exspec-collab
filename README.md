@@ -128,3 +128,14 @@ Submission payload keys:
 - Validate end-to-end Google Apps Script response behavior with production Sheet permissions.
 - Confirm final legal review/version of `assets/docs/Wrekd-Tech-ExSpec-NDA.pdf`.
 - If NDA PDF is not final, upload the final approved file to `assets/docs/Wrekd-Tech-ExSpec-NDA.pdf`.
+
+## 11) Design intent preservation review
+### Preserved intentional elements
+- Existing logo and NDA assets were retained in-place under `assets/logos/` and `assets/docs/`.
+- Sticky header, skip link accessibility, section-based navigation, and reduced-motion handling remain part of the final implementation.
+- Existing lightweight interaction intent was preserved through expandable collaboration opportunity items for improved readability without adding libraries.
+
+### Adjusted elements (intended updates)
+- The visible embedded Google Form approach was replaced with a native HTML inquiry form and direct Apps Script JSON submission flow.
+- The visual language was normalized to a cleaner institutional palette and hierarchy for academic/industry audiences.
+- Messaging was tightened to consistently reflect conceptual and system-design stage positioning (future tense, no deployed-capability claims).

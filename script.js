@@ -72,6 +72,31 @@
     revealNodes.forEach((node) => node.classList.add("visible"));
   }
 
+  const opportunityItems = Array.from(document.querySelectorAll(".opportunity-item"));
+  const setOpenState = (item, shouldOpen) => {
+    const trigger = item.querySelector(".opportunity-trigger");
+    if (!trigger) return;
+    trigger.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+    item.classList.toggle("is-open", shouldOpen);
+  };
+
+  opportunityItems.forEach((item, index) => {
+    const trigger = item.querySelector(".opportunity-trigger");
+    if (!trigger) return;
+
+    if (index === 0) {
+      setOpenState(item, true);
+    }
+
+    trigger.addEventListener("click", () => {
+      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+      opportunityItems.forEach((otherItem) => {
+        if (otherItem !== item) setOpenState(otherItem, false);
+      });
+      setOpenState(item, !isOpen);
+    });
+  });
+
   const setStatus = (message, stateClass) => {
     if (!statusNode) return;
     statusNode.textContent = message;
