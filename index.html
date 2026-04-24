@@ -14,7 +14,7 @@
       content="A research-driven initiative by Wrek’d Tech focused on modular e-waste recycling, systems engineering, intelligent automation, and strategic material recovery."
     />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#1F1F1F" />
+    <meta name="theme-color" content="#06110A" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -33,11 +33,11 @@
         </a>
 
         <nav aria-label="Primary navigation" class="site-nav">
-          <a href="#about">About</a>
-          <a href="#why-it-matters">Why It Matters</a>
-          <a href="#collaboration">Collaboration</a>
-          <a href="#nda-access">NDA Access</a>
-          <a href="#contact">Contact</a>
+          <a class="nav-link" href="#overview">Overview</a>
+          <a class="nav-link" href="#about">Technology</a>
+          <a class="nav-link" href="#collaboration">Collaboration</a>
+          <a class="nav-link" href="#nda-access">NDA Request</a>
+          <a class="nav-link" href="#contact">Contact</a>
         </nav>
 
         <a class="btn btn-primary" href="#form-section">Request NDA Access</a>
@@ -45,9 +45,9 @@
     </header>
 
     <main id="main-content">
-      <section class="hero section">
-        <div class="container hero-grid reveal-on-scroll">
-          <div>
+      <section id="overview" class="hero section">
+        <div class="container hero-grid">
+          <div class="hero-stagger">
             <p class="eyebrow">Ex-Spec Research Initiative</p>
             <h1>Ex-Spec Academic &amp; Industry Research Initiative</h1>
             <p class="lead">
@@ -64,11 +64,12 @@
               <a class="btn btn-secondary" href="#form-section">Request NDA Access</a>
             </div>
           </div>
-          <figure class="hero-visual">
+          <figure class="hero-visual" aria-label="Ex-Spec logo showcase">
             <img
-              src="assets/images/placeholder-research-visual.svg"
-              alt="Abstract systems diagram representing modular research and recycling workflow"
-              loading="lazy"
+              class="hero-logo"
+              src="assets/logos/exspec_primary.png"
+              alt="Ex-Spec by Wrek’d Tech logo"
+              loading="eager"
             />
           </figure>
         </div>
